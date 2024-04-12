@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import paginationReducer from '@/app/slice';
+import appReducer from '@/app/reducer';
 import { todoApi } from '@/app/service';
 
 export const store = configureStore({
   reducer: {
-    pagination: paginationReducer,
+    app: appReducer,
     [todoApi.reducerPath]: todoApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

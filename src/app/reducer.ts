@@ -1,21 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface PaginationState {
+interface AppState {
   page: number;
   pageSize: number;
   columnFilters: Record<string, any>;
   sorting: string;
 }
 
-const initialState: PaginationState = {
+const initialState: AppState = {
   page: 0,
   pageSize: 5,
   columnFilters: {},
   sorting: '',
 };
 
-const paginationSlice = createSlice({
-  name: 'pagination',
+const appSlice = createSlice({
+  name: 'app',
   initialState,
   reducers: {
     setPage(state, action: PayloadAction<number>) {
@@ -33,5 +33,5 @@ const paginationSlice = createSlice({
   },
 });
 
-export const { setPage, setPageSize, setColumnFilter, setSorting } = paginationSlice.actions;
-export default paginationSlice.reducer;
+export const { setPage, setPageSize, setColumnFilter, setSorting } = appSlice.actions;
+export default appSlice.reducer;

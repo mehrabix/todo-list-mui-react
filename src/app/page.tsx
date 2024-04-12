@@ -1,6 +1,6 @@
 'use client'
 import { RootState, store } from '../store';
-import { setColumnFilter, setPage, setPageSize, setSorting } from './slice';
+import { setColumnFilter, setPage, setPageSize, setSorting } from './reducer';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useRouter } from 'next/navigation';
@@ -12,9 +12,9 @@ import { Provider } from 'react-redux';
 
 function Home() {
 
-  const pagination = useSelector((state: RootState) => state.pagination);
-  const sorting = useSelector((state: RootState) => state.pagination.sorting);
-  const columnFilters = useSelector((state: RootState) => state.pagination.columnFilters);
+  const pagination = useSelector((state: RootState) => state.app);
+  const sorting = useSelector((state: RootState) => state.app.sorting);
+  const columnFilters = useSelector((state: RootState) => state.app.columnFilters);
   const router = useRouter()
 
   const dispatch = useDispatch();
