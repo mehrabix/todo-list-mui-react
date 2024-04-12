@@ -41,7 +41,7 @@ function Home() {
     },
   ];
 
-  const handleShowFullDescription = (row: any) => {
+  const handleShowFullDescription = (row: { id: number; }) => {
     dispatch(setPage(pagination.page));
     dispatch(setPageSize(pagination.pageSize));
     router.push(`description/${row.id}`);
