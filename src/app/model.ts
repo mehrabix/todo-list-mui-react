@@ -20,6 +20,6 @@ interface PaginatedResponse<T> extends Pagination {
 
 type TodoResponse = PaginatedResponse<TodoPayload>;
 
-export { TodoSchema };
 export type { TodoPayload, TodoResponse };
+
 

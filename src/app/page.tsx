@@ -5,17 +5,42 @@ import { ApiProvider } from '@reduxjs/toolkit/query/react';
 import { useMemo, useState } from 'react';
 import { TodoPayload } from './model';
 import { todoApi, useCreateTodoMutation, useListTodosQuery } from './service';
+import { useRouter } from 'next/navigation';
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'title', headerName: 'Title', width: 130 },
-  { field: 'completed', headerName: 'Completed', width: 120, type: 'boolean' },
-  { field: 'description', headerName: 'Description', width: 200 },
-];
 
 
 function Home() {
   const [pagination, setPagination] = useState({ page: 0, pageSize: 5 });
+
+  const router = useRouter()
+
+  const columns: GridColDef[] = [ 
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'title', headerName: 'Title', width: 130 },
+    { field: 'completed', headerName: 'Completed', width: 120, type: 'boolean' },
+    { field: 'description', headerName: 'Description', width: 200 },
+    {
+      field: 'showFullDescription',
+      headerName: 'showFullDescription',
+      width: 250,
+      renderCell: (params) => (
+        <Button
+          variant="outlined"
+          color="primary"
+          size="small"
+          onClick={() => handleShowFullDescription(params.row)}
+        >
+          Show Full Description
+        </Button>
+      ),
+    },
+  ];
+  
+  const handleShowFullDescription =(row: any) =>{
+    router.push(`description/${row.id}`)
+  }
+
+
   const { data: todos, isLoading: todosLoading, refetch: refreshTodos } = useListTodosQuery({
     skip: pagination.page * pagination.pageSize,
     take: pagination.pageSize,
