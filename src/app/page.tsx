@@ -1,6 +1,6 @@
 'use client'
 import { RootState, store } from './store';
-import { setPage, setPageSize } from './paginationSlice';
+import { setColumnFilter, setPage, setPageSize, setSorting } from './slice';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useRouter } from 'next/navigation';
@@ -13,12 +13,13 @@ import { Provider } from 'react-redux';
 function Home() {
 
   const pagination = useSelector((state: RootState) => state.pagination);
-
+  const sorting = useSelector((state: RootState) => state.pagination.sorting);
+  const columnFilters = useSelector((state: RootState) => state.pagination.columnFilters);
   const router = useRouter()
 
   const dispatch = useDispatch();
 
-  const columns: GridColDef[] = [ 
+  const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'title', headerName: 'Title', width: 130 },
     { field: 'completed', headerName: 'Completed', width: 120, type: 'boolean' },
@@ -39,8 +40,8 @@ function Home() {
       ),
     },
   ];
-  
-  const handleShowFullDescription =(row: any) =>{
+
+  const handleShowFullDescription = (row: any) => {
     dispatch(setPage(pagination.page));
     dispatch(setPageSize(pagination.pageSize));
     router.push(`description/${row.id}`);
@@ -85,6 +86,7 @@ function Home() {
   };
 
   const handlePageChange = (newPage: GridPaginationModel) => {
+    debugger
     if (newPage.page !== undefined) {
       dispatch(setPage(newPage.page));
     }
@@ -92,6 +94,16 @@ function Home() {
       dispatch(setPageSize(newPage.pageSize));
     }
   }
+
+  const handleFilterChange = (field: string, value: any) => {
+    dispatch(setColumnFilter({ field, value }));
+  };
+
+  const handleSortingChange = (field: string) => {
+    const newSorting = field === pagination.sorting ? `-${field}` : field;
+    dispatch(setSorting(newSorting));
+  };
+
 
 
   const memoizedTodos = useMemo(() => todos?.items || [], [todos]);
@@ -126,7 +138,27 @@ function Home() {
             checkboxSelection
             pagination
             paginationMode="server"
+            filterModel={{
+              items: Object.keys(columnFilters).map((field) => ({
+                field: field,
+                operator: 'contains',
+                value: columnFilters[field],
+              }))
+            }}
+            sortModel={sorting ? [{ field: sorting, sort: 'asc' }] : []}
             onPaginationModelChange={(newPage) => handlePageChange(newPage)}
+            onSortModelChange={(model) => {
+              if (model.length > 0) {
+                handleSortingChange(model[0].field);
+              }
+            }}
+            onFilterModelChange={(model) => {
+              model.items.forEach((item) => {
+                const field = item.field;
+                handleFilterChange(field, item.value);
+              });
+            }}
+
             disableRowSelectionOnClick
             localeText={{
               noRowsLabel: "There is no data :("
@@ -183,7 +215,7 @@ function Home() {
 export default function HomeDataSourceProvider() {
   return (
     <Provider store={store}>
-        <Home />
+      <Home />
     </Provider>
   )
 }

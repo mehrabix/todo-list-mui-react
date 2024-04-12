@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import paginationReducer from './paginationSlice';
+import paginationReducer from './slice';
 import { todoApi } from './service';
 
 export const store = configureStore({
