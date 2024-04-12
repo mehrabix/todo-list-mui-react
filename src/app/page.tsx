@@ -1,5 +1,5 @@
 'use client'
-import { RootState, store } from '@/store';
+import { RootState, store } from '@/app/store';
 import { setColumnFilter, setPage, setPageSize, setSorting } from './reducer';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
