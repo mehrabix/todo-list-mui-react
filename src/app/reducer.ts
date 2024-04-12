@@ -1,11 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface AppState {
-  page: number;
-  pageSize: number;
-  columnFilters: Record<string, any>;
-  sorting: string;
-}
+import { AppState } from './model';
 
 const initialState: AppState = {
   page: 0,

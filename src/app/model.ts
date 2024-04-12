@@ -1,5 +1,13 @@
 import { z } from 'zod';
 
+
+export interface AppState {
+  page: number;
+  pageSize: number;
+  columnFilters: Record<string, any>;
+  sorting: string;
+}
+
 const TodoSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
@@ -20,6 +28,6 @@ interface PaginatedResponse<T> extends Pagination {
 
 type TodoResponse = PaginatedResponse<TodoPayload>;
 
-export type { TodoPayload, TodoResponse };
 
+export type { TodoPayload, TodoResponse };
 
