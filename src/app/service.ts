@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { TodoPayload, TodoResponse } from './model';
 
-export const todoApi = createApi({
-  reducerPath: 'todoApi',
+export const todoService = createApi({
+  reducerPath: 'todoService',
   baseQuery: fetchBaseQuery({ baseUrl: `${process.env.API_URL}/todos/` }),
   endpoints: (builder) => ({
     createTodo: builder.mutation<void, Partial<TodoPayload>>({
@@ -52,4 +52,4 @@ export const {
   useGetAllTodosQuery,
   useBulkDeleteTodosMutation,
   useListTodosQuery,
-} = todoApi;
+} = todoService;

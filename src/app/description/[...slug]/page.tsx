@@ -1,5 +1,5 @@
 'use client'
-import { todoApi, useGetTodoByIdQuery } from '@/app/service';
+import { todoService, useGetTodoByIdQuery } from '@/app/service';
 import { Button } from '@mui/material';
 import { ApiProvider } from '@reduxjs/toolkit/query/react';
 import { useRouter } from 'next/navigation';
@@ -38,7 +38,7 @@ function Description({ slug }: { slug: string[] }) {
 
 export default function HomeDataSourceProvider({ params }: { params: { slug: string[] } }) {
     return (
-        <ApiProvider api={todoApi}>
+        <ApiProvider api={todoService}>
             <Description slug={params.slug} />
         </ApiProvider>
     )
