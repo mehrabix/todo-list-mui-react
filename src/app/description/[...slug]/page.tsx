@@ -26,6 +26,7 @@ function Description({ slug }: { slug: string[] }) {
                 <div>
                     Here is full Description feched by id {slug[0]}:
                     <p>{todo.description}</p>
+                    Click 'Back', and you will be directed to the exact page you previously visited.
                 </div>
             ) : (
                 <div>Todo not found.</div>

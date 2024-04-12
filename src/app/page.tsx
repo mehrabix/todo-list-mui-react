@@ -1,18 +1,22 @@
 'use client'
+import { RootState, store } from './store';
+import { setPage, setPageSize } from './paginationSlice';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
-import { ApiProvider } from '@reduxjs/toolkit/query/react';
-import { useMemo, useState } from 'react';
-import { TodoPayload } from './model';
-import { todoApi, useCreateTodoMutation, useListTodosQuery } from './service';
 import { useRouter } from 'next/navigation';
-
-
+import { useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { TodoPayload } from './model';
+import { useCreateTodoMutation, useListTodosQuery } from './service';
+import { Provider } from 'react-redux';
 
 function Home() {
-  const [pagination, setPagination] = useState({ page: 0, pageSize: 5 });
+
+  const pagination = useSelector((state: RootState) => state.pagination);
 
   const router = useRouter()
+
+  const dispatch = useDispatch();
 
   const columns: GridColDef[] = [ 
     { field: 'id', headerName: 'ID', width: 70 },
@@ -37,7 +41,9 @@ function Home() {
   ];
   
   const handleShowFullDescription =(row: any) =>{
-    router.push(`description/${row.id}`)
+    dispatch(setPage(pagination.page));
+    dispatch(setPageSize(pagination.pageSize));
+    router.push(`description/${row.id}`);
   }
 
 
@@ -80,12 +86,13 @@ function Home() {
 
   const handlePageChange = (newPage: GridPaginationModel) => {
     if (newPage.page !== undefined) {
-      setPagination(prevPagination => ({
-        ...prevPagination,
-        page: newPage.page,
-      }));
+      dispatch(setPage(newPage.page));
+    }
+    if (newPage.pageSize !== undefined) {
+      dispatch(setPageSize(newPage.pageSize));
     }
   }
+
 
   const memoizedTodos = useMemo(() => todos?.items || [], [todos]);
 
@@ -175,8 +182,8 @@ function Home() {
 
 export default function HomeDataSourceProvider() {
   return (
-    <ApiProvider api={todoApi}>
-      <Home />
-    </ApiProvider>
+    <Provider store={store}>
+        <Home />
+    </Provider>
   )
 }
