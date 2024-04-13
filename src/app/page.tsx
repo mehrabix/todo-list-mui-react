@@ -12,7 +12,8 @@ import { Provider } from 'react-redux';
 
 function Home() {
 
-  const pagination = useSelector((state: RootState) => state.app);
+  const page = useSelector((state: RootState) => state.app.page);
+  const pageSize = useSelector((state: RootState) => state.app.pageSize);
   const sorting = useSelector((state: RootState) => state.app.sorting);
   const columnFilters = useSelector((state: RootState) => state.app.columnFilters);
   const router = useRouter()
@@ -42,16 +43,16 @@ function Home() {
   ];
 
   const handleShowFullDescription = (row: { id: number; }) => {
-    dispatch(setPage(pagination.page));
-    dispatch(setPageSize(pagination.pageSize));
+    dispatch(setPage(page));
+    dispatch(setPageSize(pageSize));
     router.push(`description/${row.id}`);
   }
 
 
   const { data: todos, isLoading: todosLoading, refetch: refreshTodos } = useListTodosQuery({
-    skip: pagination.page * pagination.pageSize,
-    take: pagination.pageSize,
-    pageSize: pagination.pageSize,
+    skip: page * pageSize,
+    take: pageSize,
+    pageSize: pageSize,
   });
 
   const [mutate, { isError, error, isLoading: createTodoLoading }] = useCreateTodoMutation();
@@ -77,7 +78,6 @@ function Home() {
 
     try {
       const data = await mutate(formValues);
-      console.log('Created todo:', data);
       handleClose();
       refreshTodos();
     } catch (error) {
@@ -100,7 +100,7 @@ function Home() {
   };
 
   const handleSortingChange = (field: string) => {
-    const newSorting = field === pagination.sorting ? `-${field}` : field;
+    const newSorting = field === sorting ? `-${field}` : field;
     dispatch(setSorting(newSorting));
   };
 
@@ -128,7 +128,7 @@ function Home() {
             columns={columns}
             pageSizeOptions={[5, 10]}
             rowCount={todos?.totalItems || 0}
-            paginationModel={{ page: pagination.page, pageSize: pagination.pageSize }}
+            paginationModel={{ page: page, pageSize: pageSize }}
             initialState={{
               pagination: {
                 paginationModel: { page: 0, pageSize: 5 },
