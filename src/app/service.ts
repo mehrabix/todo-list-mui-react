@@ -38,8 +38,26 @@ export const todoService = createApi({
         body: { ids },
       }),
     }),
-    listTodos: builder.query<TodoResponse, { skip: number, take: number, pageSize: number }>({
-      query: ({ skip, take, pageSize }) => `list?skip=${skip}&take=${take}&pageSize=${pageSize}`,
+    listTodos: builder.query<TodoResponse, { skip: number, take: number, pageSize: number, sortBy?: string, sortDirection?: string, title?: string, completed?: boolean, description?: string }>({
+      query: ({ skip, take, pageSize, sortBy, sortDirection, title, completed, description }) => {
+        let queryString = `list?skip=${skip}&take=${take}&pageSize=${pageSize}`;
+        if (sortBy) {
+          queryString += `&sortBy=${sortBy}`;
+        }
+        if (sortDirection) {
+          queryString += `&sortDirection=${sortDirection}`;
+        }
+        if (title) {
+          queryString += `&title=${encodeURIComponent(title)}`;
+        }
+        if (completed !== undefined) {
+          queryString += `&completed=${completed}`;
+        }
+        if (description) {
+          queryString += `&description=${encodeURIComponent(description)}`;
+        }
+        return queryString;
+      },
     }),
   }),
 });

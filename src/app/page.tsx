@@ -27,6 +27,8 @@ function Home() {
     { field: 'description', headerName: 'Description', width: 200 },
     {
       field: 'showFullDescription',
+      filterable:false,
+      sortable:false,
       headerName: 'showFullDescription',
       width: 250,
       renderCell: (params) => (
@@ -48,24 +50,18 @@ function Home() {
     router.push(`description/${row.id}`);
   }
 
-
   const { data: todos, isLoading: todosLoading, refetch: refreshTodos } = useListTodosQuery({
     skip: page * pageSize,
     take: pageSize,
     pageSize: pageSize,
+    sortBy: sorting?.replace('-', ''),
+    sortDirection: sorting?.startsWith('-') ? 'desc' : 'asc',
+    ...columnFilters
   });
 
   const [mutate, { isError, error, isLoading: createTodoLoading }] = useCreateTodoMutation();
 
   const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -78,7 +74,7 @@ function Home() {
 
     try {
       const data = await mutate(formValues);
-      handleClose();
+      setOpen(false)
       refreshTodos();
     } catch (error) {
       console.error('Error creating todo:', error);
@@ -86,28 +82,27 @@ function Home() {
   };
 
   const handlePageChange = (newPage: GridPaginationModel) => {
-    debugger
     if (newPage.page !== undefined) {
       dispatch(setPage(newPage.page));
     }
     if (newPage.pageSize !== undefined) {
       dispatch(setPageSize(newPage.pageSize));
     }
+    refreshTodos();
   }
 
   const handleFilterChange = (field: string, value: any) => {
     dispatch(setColumnFilter({ field, value }));
+    refreshTodos();
   };
 
   const handleSortingChange = (field: string) => {
     const newSorting = field === sorting ? `-${field}` : field;
     dispatch(setSorting(newSorting));
+    refreshTodos();
   };
 
-
-
   const memoizedTodos = useMemo(() => todos?.items || [], [todos]);
-
 
   if (todosLoading) return <div className='h-screen w-full flex justify-center items-center'><span>Loading...</span></div>;
 
@@ -118,7 +113,7 @@ function Home() {
         <div className='w-full lg:w-1/2'>
 
           <div className='space-x-3 mb-3'>
-            <Button onClick={handleClickOpen} variant="contained" color="success">
+            <Button onClick={() => setOpen(true)} variant="contained" color="success">
               Add
             </Button>
           </div>
@@ -145,7 +140,7 @@ function Home() {
                 value: columnFilters[field],
               }))
             }}
-            sortModel={sorting ? [{ field: sorting, sort: 'asc' }] : []}
+            sortModel={sorting ? [{ field: sorting.replace('-', ''), sort: sorting.startsWith('-') ? 'desc' : 'asc' }] : []}
             onPaginationModelChange={(newPage) => handlePageChange(newPage)}
             onSortModelChange={(model) => {
               if (model.length > 0) {
@@ -165,7 +160,7 @@ function Home() {
             }}
           />
         </div>
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Add a new todo</DialogTitle>
           <DialogContent>
             <DialogContentText>
@@ -201,7 +196,7 @@ function Home() {
                 variant="standard"
               />
               <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={() => setOpen(false)}>Cancel</Button>
                 <Button type="submit">Add Todo</Button>
               </DialogActions>
             </form>
