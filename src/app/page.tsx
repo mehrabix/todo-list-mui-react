@@ -27,8 +27,8 @@ function Home() {
     { field: 'description', headerName: 'Description', width: 200 },
     {
       field: 'showFullDescription',
-      filterable:false,
-      sortable:false,
+      filterable: false,
+      sortable: false,
       headerName: 'showFullDescription',
       width: 250,
       renderCell: (params) => (
@@ -74,7 +74,7 @@ function Home() {
 
     try {
       const data = await mutate(formValues);
-      setOpen(false)
+      setOpen(false);
       refreshTodos();
     } catch (error) {
       console.error('Error creating todo:', error);
@@ -88,18 +88,15 @@ function Home() {
     if (newPage.pageSize !== undefined) {
       dispatch(setPageSize(newPage.pageSize));
     }
-    refreshTodos();
   }
 
   const handleFilterChange = (field: string, value: any) => {
     dispatch(setColumnFilter({ field, value }));
-    refreshTodos();
   };
 
   const handleSortingChange = (field: string) => {
     const newSorting = field === sorting ? `-${field}` : field;
     dispatch(setSorting(newSorting));
-    refreshTodos();
   };
 
   const memoizedTodos = useMemo(() => todos?.items || [], [todos]);
