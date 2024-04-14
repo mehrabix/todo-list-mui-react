@@ -1,14 +1,13 @@
 'use client'
 import { RootState, store } from '@/store';
-import { setColumnFilter, setPage, setPageSize, setSorting } from './reducer';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { TodoPayload } from './model';
+import { setColumnFilter, setPage, setPageSize, setSorting } from './reducer';
 import { useCreateTodoMutation, useListTodosQuery } from './service';
-import { Provider } from 'react-redux';
 
 function Home() {
 
