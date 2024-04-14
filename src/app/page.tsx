@@ -91,11 +91,13 @@ function Home() {
 
   const handleFilterChange = (field: string, value: any) => {
     dispatch(setColumnFilter({ field, value }));
+    // dispatch(setPage(0));
   };
 
   const handleSortingChange = (field: string) => {
     const newSorting = field === sorting ? `-${field}` : field;
     dispatch(setSorting(newSorting));
+    // dispatch(setPage(0));
   };
 
 
