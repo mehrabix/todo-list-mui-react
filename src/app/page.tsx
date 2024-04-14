@@ -99,7 +99,6 @@ function Home() {
     dispatch(setSorting(newSorting));
   };
 
-  const memoizedTodos = useMemo(() => todos?.items || [], [todos]);
 
   if (todosLoading) return <div className='h-screen w-full flex justify-center items-center'><span>Loading...</span></div>;
 
@@ -116,7 +115,7 @@ function Home() {
           </div>
           <DataGrid
             className='!h-96 bg-slate-100'
-            rows={memoizedTodos}
+            rows={todos?.items || []}
             columns={columns}
             pageSizeOptions={[5, 10]}
             rowCount={todos?.totalItems || 0}
